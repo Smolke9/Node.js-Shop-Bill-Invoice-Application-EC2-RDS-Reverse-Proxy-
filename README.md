@@ -27,7 +27,7 @@
 ## 2️⃣ AWS Infrastructure Setup
 
 ### 🔹 EC2 Instances
-![Shop Invoice Application](screenshots/1.png)
+![Shop Invoice Application](screenshot/1.png)
 #### EC2-1: Reverse Proxy
 
 -   AMI: Amazon Linux 2
@@ -50,7 +50,7 @@
 -   Port: 3306
 -   Public Access: ❌ No
 -   SG: Allow 3306 only from Node EC2 SG
-![Shop Invoice Application](screenshots/2.png)
+![Shop Invoice Application](screenshot/2.png)
 ------------------------------------------------------------------------
 
 ## 3️⃣ Database Setup (RDS)
@@ -80,7 +80,7 @@ CREATE TABLE invoices (
 curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
 sudo yum install -y nodejs
 ```
-![Shop Invoice Application](screenshots/3.png)
+![Shop Invoice Application](screenshot/3.png)
 ### 🔹 Create Project
 
 ``` bash
@@ -96,7 +96,7 @@ npm install express mysql2 body-parser dotenv
 ```
 
 ------------------------------------------------------------------------
-![Shop Invoice Application](screenshots/4.png)
+![Shop Invoice Application](screenshot/4.png)
 
 ## 5️⃣ Application Code
 
@@ -286,10 +286,10 @@ app.listen(3000, () => {
 ``` bash
 node index.js
 ```
-![Shop Invoice Application](screenshots/5.png)
+![Shop Invoice Application](screenshot/5.png)
 ## Node.js 3000 show page
-![Shop Invoice Application](screenshots/6.png)
-![Shop Invoice Application](screenshots/7.png)
+![Shop Invoice Application](screenshot/6.png)
+![Shop Invoice Application](screenshot/7.png)
 
 ### ✔ Recommended (PM2)
 
@@ -324,7 +324,7 @@ server {
 
 ------------------------------------------------------------------------
 ## 2nd EC2 Resverse Proxy Nginx Config
-![Shop Invoice Application](screenshots/8.png)
+![Shop Invoice Application](screenshot/8.png)
 
 ## 8️⃣ Security Hardening
 
@@ -339,8 +339,8 @@ server {
     http://<PROXY_PUBLIC_IP>
 
 ------------------------------------------------------------------------
-![Shop Invoice Application](screenshots/9.png)
-![Shop Invoice Application](screenshots/10.png)
+![Shop Invoice Application](screenshot/9.png)
+![Shop Invoice Application](screenshot/10.png)
 ## 🔟 Verify Database
 
 ``` sql
@@ -348,7 +348,7 @@ SELECT * FROM invoices;
 ```
 
 ------------------------------------------------------------------------
-![Shop Invoice Application](screenshots/11.png)
+![Shop Invoice Application](screenshot/11.png)
 ## ✅ Conclusion
 
 Production-style Node.js deployment using AWS EC2, Nginx reverse proxy,
