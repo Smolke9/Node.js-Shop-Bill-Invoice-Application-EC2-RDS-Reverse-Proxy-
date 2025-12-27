@@ -27,7 +27,7 @@
 ## 2️⃣ AWS Infrastructure Setup
 
 ### 🔹 EC2 Instances
-
+![Shop Invoice Application](screenshots/1.png)
 #### EC2-1: Reverse Proxy
 
 -   AMI: Amazon Linux 2
@@ -50,7 +50,7 @@
 -   Port: 3306
 -   Public Access: ❌ No
 -   SG: Allow 3306 only from Node EC2 SG
-
+![Shop Invoice Application](screenshots/2.png)
 ------------------------------------------------------------------------
 
 ## 3️⃣ Database Setup (RDS)
@@ -80,7 +80,7 @@ CREATE TABLE invoices (
 curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
 sudo yum install -y nodejs
 ```
-
+![Shop Invoice Application](screenshots/3.png)
 ### 🔹 Create Project
 
 ``` bash
@@ -96,6 +96,7 @@ npm install express mysql2 body-parser dotenv
 ```
 
 ------------------------------------------------------------------------
+![Shop Invoice Application](screenshots/4.png)
 
 ## 5️⃣ Application Code
 
@@ -105,40 +106,53 @@ npm install express mysql2 body-parser dotenv
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-require('dotenv').config();
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Database Connection
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME
+  host: 'YOUR-RDS-ENDPOINT',
+  user: 'admin',
+  password: 'YOUR_PASSWORD',
+  database: 'shopdb'
 });
 
 db.connect(err => {
-  if (err) console.log(err);
-  else console.log('MySQL Connected');
+  if (err) {
+    console.log('DB Error:', err);
+  } else {
+    console.log('MySQL Connected');
+  }
 });
 
+// Home Page
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/invoice.html');
 });
 
+// Submit Invoice
 app.post('/submit', (req, res) => {
   const { customer, product, quantity, price } = req.body;
   const total = quantity * price;
 
-  db.query(
-    'INSERT INTO invoices (customer_name, product_name, quantity, price, total) VALUES (?, ?, ?, ?, ?)',
-    [customer, product, quantity, price, total],
-    () => res.send('<h2>Invoice Saved Successfully</h2>')
-  );
+  const sql = `
+    INSERT INTO invoices 
+    (customer_name, product_name, quantity, price, total)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.query(sql, [customer, product, quantity, price, total], (err) => {
+    if (err) throw err;
+    res.send('<h2>Invoice Saved Successfully</h2>');
+  });
 });
 
-app.listen(3000, () => console.log('Running on port 3000'));
+app.listen(3000, () => {
+  console.log('Node App running on port 3000');
+});
+
 ```
 
 ### 🔹 invoice.html
@@ -272,6 +286,10 @@ app.listen(3000, () => console.log('Running on port 3000'));
 ``` bash
 node index.js
 ```
+![Shop Invoice Application](screenshots/5.png)
+## Node.js 3000 show page
+![Shop Invoice Application](screenshots/6.png)
+![Shop Invoice Application](screenshots/7.png)
 
 ### ✔ Recommended (PM2)
 
@@ -281,7 +299,6 @@ pm2 start index.js
 pm2 save
 pm2 startup
 ```
-
 ------------------------------------------------------------------------
 
 ## 7️⃣ Nginx Reverse Proxy Setup
@@ -306,6 +323,8 @@ server {
 ```
 
 ------------------------------------------------------------------------
+## 2nd EC2 Resverse Proxy Nginx Config
+![Shop Invoice Application](screenshots/8.png)
 
 ## 8️⃣ Security Hardening
 
@@ -320,7 +339,8 @@ server {
     http://<PROXY_PUBLIC_IP>
 
 ------------------------------------------------------------------------
-
+![Shop Invoice Application](screenshots/9.png)
+![Shop Invoice Application](screenshots/10.png)
 ## 🔟 Verify Database
 
 ``` sql
@@ -328,7 +348,7 @@ SELECT * FROM invoices;
 ```
 
 ------------------------------------------------------------------------
-
+![Shop Invoice Application](screenshots/11.png)
 ## ✅ Conclusion
 
 Production-style Node.js deployment using AWS EC2, Nginx reverse proxy,
